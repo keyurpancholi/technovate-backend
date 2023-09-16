@@ -22,6 +22,7 @@ const donorschema = new Schema({
   aadhar_url: {
     type: String,
   },
+  medical_history: String,
   organ: {
     type: String,
   },

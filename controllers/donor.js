@@ -82,6 +82,7 @@ exports.onboarding = async (req, res, next) => {
           blood_group: req.body.bodyblood_group,
           blood_report: req.body.blood_report,
           aadhar_url: req.body.aadhar_url,
+          medical_history: req.body.medical_history,
           organ: req.body.organ,
         },
       }

@@ -19,6 +19,8 @@ const recipientSchema = new Schema({
   blood_report: {
     type: String,
   },
+
+  medical_history: String,
   aadhar_url: {
     type: String,
   },

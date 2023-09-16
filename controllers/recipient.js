@@ -1,10 +1,10 @@
 const Recipient = require("../models/Recipient");
-const OrganDonation = require("../models/OrganDonation")
-const Match = require("../models/Match")
+const OrganDonation = require("../models/OrganDonation");
+const Match = require("../models/Match");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
-const mongoose = require("mongoose")
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 exports.login = async (req, res, next) => {
   let loadedUser;
@@ -27,15 +27,15 @@ exports.login = async (req, res, next) => {
     }
     const token = jwt.sign(
       { email: loadedUser.email, donorId: loadedUser._id },
-      'technovate',
+      "technovate",
       { expiresIn: "2h" }
     );
     return res.status(200).json({ token: token });
   } catch (error) {
-    if(!error.statusCode){
-      error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
 };
 
@@ -71,9 +71,8 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.onboarding = async (req, res, next) => {
-  const id = req.body._id
+  const id = req.body._id;
   try {
-
     const data = await Recipient.findByIdAndUpdate(
       { _id: new mongoose.Types.ObjectId(id) },
       {
@@ -83,6 +82,7 @@ exports.onboarding = async (req, res, next) => {
           gender: req.body.gender,
           blood_group: req.body.blood_group,
           blood_report: req.body.blood_report,
+          medical_history: req.body.medical_history,
           aadhar_url: req.body.aadhar_url,
         },
       }
@@ -106,31 +106,30 @@ exports.onboarding = async (req, res, next) => {
 };
 
 exports.request = async (req, res, next) => {
-  const id = new mongoose.Types.ObjectId(req.body.organ_id)
-  const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id)
+  const id = new mongoose.Types.ObjectId(req.body.organ_id);
+  const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id);
 
   try {
-    
-    const resp = await OrganDonation.findById({_id: id})
-    if (!resp){
-      const error = new Error("No user found")
-      error.statusCode = 404
-      throw error
+    const resp = await OrganDonation.findById({ _id: id });
+    if (!resp) {
+      const error = new Error("No user found");
+      error.statusCode = 404;
+      throw error;
     }
-    resp.organQueue.push(recipient_id)
+    resp.organQueue.push(recipient_id);
 
-    const data = await resp.save()
-    if (!data){
-      const error = new Error("Couldnt add recipient to list")
-      error.statusCode = 400
-      throw error
+    const data = await resp.save();
+    if (!data) {
+      const error = new Error("Couldnt add recipient to list");
+      error.statusCode = 400;
+      throw error;
     }
 
-    res.json(201).json({data: data})
+    res.json(201).json({ data: data });
   } catch (error) {
-    if(!error.statusCode){
-      error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
-}
+};
