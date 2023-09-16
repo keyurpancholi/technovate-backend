@@ -1,6 +1,7 @@
 const Recipient = require("../models/Recipient");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose")
 
 exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -34,18 +35,19 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.onboarding = async (req, res, next) => {
-  const email = req.email;
+  const id = req.body._id
   try {
 
-    const data = await Recipient.update(
-      { email: email },
+    const data = await Recipient.findByIdAndUpdate(
+      { _id: new mongoose.Types.ObjectId(id) },
       {
         $set: {
-          fullname: req.fullname,
-          age: req.age,
-          gender: req.gender,
-          blood_group: req.blood_group,
-          aadhar_url: req.aadhar_url,
+          fullname: req.body.fullname,
+          age: req.body.age,
+          gender: req.body.gender,
+          blood_group: req.body.blood_group,
+          blood_report: req.body.blood_report,
+          aadhar_url: req.body.aadhar_url,
         },
       }
     );
@@ -53,7 +55,7 @@ exports.onboarding = async (req, res, next) => {
     if (!data) {
       const error = new Error("Failed to create a new account");
       error.statusCode = 400;
-      throw err;
+      throw error;
     }
 
     return res
@@ -63,6 +65,6 @@ exports.onboarding = async (req, res, next) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    next(err);
+    next(error);
   }
 };
