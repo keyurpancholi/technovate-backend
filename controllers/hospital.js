@@ -1,9 +1,10 @@
-const Hospital = require("../models/Hospital");
-const Match = require("../models/Match");
-const OrganDonation = require("../models/OrganDonation");
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const Hospital = require('../models/Hospital');
+const Match = require('../models/Match');
+const OrganDonation = require('../models/OrganDonation');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const Appointment = require('../models/Appointment');
 
 exports.organMatchInitialize = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.donor_id);
@@ -30,7 +31,7 @@ exports.createMatch = async (req, res, next) => {
   const donor_id = new mongoose.Types.ObjectId(req.body.donor_id);
   const organ = req.body.organ;
   const status = req.body.status;
-  const decline_message = req.body.decline_message || "";
+  const decline_message = req.body.decline_message || '';
 
   const match = new Match({
     donorId: donor_id,
@@ -42,7 +43,7 @@ exports.createMatch = async (req, res, next) => {
   try {
     const data = await match.save();
     if (!data) {
-      const error = new Error("Cant create a match");
+      const error = new Error('Cant create a match');
       error.statusCode = 400;
       throw error;
     }
@@ -59,7 +60,7 @@ exports.createMatch = async (req, res, next) => {
     resp.organQueue.splice(idx, 1);
     const result = await resp.save();
     if (!result) {
-      const error = new Error("Cant delete a match");
+      const error = new Error('Cant delete a match');
       error.statusCode = 400;
       throw error;
     }
@@ -81,7 +82,7 @@ exports.createMatch = async (req, res, next) => {
 
 exports.getAllOrgans = async (req, res, next) => {
   try {
-    const list = await OrganDonation.find().populate(["organQueue", "donorId"]);
+    const list = await OrganDonation.find().populate(['organQueue', 'donorId']);
     return res.status(200).json({ data: list });
   } catch (error) {
     if (!error.statusCode) {
@@ -96,13 +97,13 @@ exports.updateStatus = async (req, res, next) => {
   const id = req.body.id;
 
   try {
-    if (status === "Approved") {
+    if (status === 'Approved') {
       const resp = await Match.findByIdAndUpdate(
         { id: id },
         { $set: { status: status } }
       );
       if (!resp) {
-        const error = new Error("Couldnt find a recipient");
+        const error = new Error('Couldnt find a recipient');
         error.statusCode = 404;
         throw error;
       }
@@ -127,21 +128,21 @@ exports.login = async (req, res, next) => {
   try {
     const user = await Hospital.findOne({ email: email });
     if (!user) {
-      const error = new Error("No recipient found. Invalid credentials");
+      const error = new Error('No recipient found. Invalid credentials');
       error.statusCode = 404;
       throw error;
     }
     loadedUser = user;
     const bool = await bcrypt.compare(password, user.password);
     if (!bool) {
-      const error = new Error("Wrong password!");
+      const error = new Error('Wrong password!');
       error.statusCode = 401;
       throw error;
     }
     const token = jwt.sign(
       { email: loadedUser.email, donorId: loadedUser._id },
-      "technovate",
-      { expiresIn: "2h" }
+      'technovate',
+      { expiresIn: '2h' }
     );
     return res.status(200).json({ token: token, user: loadedUser });
   } catch (error) {
@@ -160,17 +161,49 @@ exports.signup = async (req, res, next) => {
     const hospital = new Hospital({ email: email, password: hashedpw });
     const resp = await hospital.save();
     if (!resp) {
-      const error = new Error("Failed to create a new account");
+      const error = new Error('Failed to create a new account');
       error.statusCode = 400;
       throw err;
     }
     return res
       .status(201)
-      .json({ message: "User registered successfully", data: resp });
+      .json({ message: 'User registered successfully', data: resp });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
+  }
+};
+
+exports.makeAppointment = async (req, res, next) => {
+  const { recipient_id, donor_id, date, organ, doctors, hospital_id } =
+    req.body;
+  const appointment = new Appointment({
+    recipientId: new mongoose.Types.ObjectId(recipient_id),
+    donorId: new mongoose.Types.ObjectId(donor_id),
+    date,
+    doctors,
+    organ,
+    hospital: new mongoose.Types.ObjectId(hospital_id),
+  });
+  try {
+    const data = await appointment.save();
+    res.json({ data: data });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+exports.getAppointmentsByHospital = async (req, res) => {
+  const { hospital_id } = req.body;
+  try {
+    const resp = await Appointment.findOne({
+      hospitalId: new mongoose.Types.ObjectId(hospital_id),
+    });
+
+    res.json({ data: resp });
+  } catch (err) {
+    return res.status(500).json(err);
   }
 };

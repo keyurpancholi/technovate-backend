@@ -1,20 +1,24 @@
-const router = require("express").Router();
-const hospitalControllers = require("../controllers/hospital")
+const router = require('express').Router();
+const hospitalControllers = require('../controllers/hospital');
 
 // router.get('/matches', hospitalControllers.getAllMatch)
 
-router.patch("/match", hospitalControllers.updateStatus)
+router.patch('/match', hospitalControllers.updateStatus);
 
-router.get('/match', hospitalControllers.getSingleMatch)
+router.get('/match', hospitalControllers.getSingleMatch);
 
-router.post("/request", hospitalControllers.organMatchInitialize)
+router.post('/request', hospitalControllers.organMatchInitialize);
 
-router.post('/match', hospitalControllers.createMatch)
+router.post('/match', hospitalControllers.createMatch);
 
-router.post("/signup", hospitalControllers.signup)
+router.post('/signup', hospitalControllers.signup);
 
-router.post("/login", hospitalControllers.login)
+router.post('/login', hospitalControllers.login);
 
-router.get("/organs", hospitalControllers.getAllOrgans)
+router.get('/organs', hospitalControllers.getAllOrgans);
 
-module.exports = router
+router.get('/appointments', hospitalControllers.getAppointmentsByHospital);
+
+router.post('/appointments', hospitalControllers.makeAppointment);
+
+module.exports = router;
