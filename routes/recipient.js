@@ -9,4 +9,6 @@ router.patch('/request', recipientController.request)
 
 router.post('/login', recipientController.login)
 
+router.post("/match", recipientController.matchByRecipientId)
+
 module.exports = router 
