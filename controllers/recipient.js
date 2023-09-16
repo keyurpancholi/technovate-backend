@@ -143,7 +143,7 @@ exports.matchByRecipientId = async (req, res, next) => {
       error.statusCode = 400
       throw error
     }
-    
+    return res.status.json({data: data})
   } catch (error) {
     if(!error.statusCode){
       error.statusCode = 500
