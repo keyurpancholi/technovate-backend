@@ -148,3 +148,27 @@ exports.getDonorById = async (req, res, next) => {
     next(error)
   }
 };
+
+exports.changeOrgan = async (req, res, next) => {
+  const donor_id = new mongoose.Types.ObjectId(req.body.donor_id)
+  const organ = req.body.organ
+
+  try {
+    const resp = await OrganDonation.findOneAndUpdate({donorId: donor_id}, {$set: {organ: organ}})
+    if(!resp){
+      const error = new Error("Cant find organ")
+      error.statusCode = 404
+    }
+    const data = await Donor.findByIdAndUpdate({_id: donor_id}, {$set: {organ: organ}})
+    if(!data){
+      const error = new Error("Cant find donor")
+      error.statusCode = 404
+    }
+    return res.json(200).json({message: "Organs updated successfully"})
+  } catch (error) {
+   if(!error.statusCode){
+    error.statusCode = 500
+   } 
+   next(error)
+  }
+}
