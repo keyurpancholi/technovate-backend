@@ -79,7 +79,7 @@ exports.onboarding = async (req, res, next) => {
           fullname: req.body.fullname,
           age: req.body.age,
           gender: req.body.gender,
-          blood_group: req.body.bodyblood_group,
+          blood_group: req.body.body.blood_group,
           blood_report: req.body.blood_report,
           aadhar_url: req.body.aadhar_url,
           medical_history: req.body.medical_history,
