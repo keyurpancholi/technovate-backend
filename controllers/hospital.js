@@ -120,7 +120,7 @@ exports.login = async (req, res, next) => {
     }
     const token = jwt.sign(
       { email: loadedUser.email, donorId: loadedUser._id },
-      process.env.JWT_PRIVATE_KEY,
+      'technovate',
       { expiresIn: "2h" }
     );
     return res.json(200).json({ token: token });
