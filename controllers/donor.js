@@ -23,18 +23,18 @@ exports.login = async (req, res, next) => {
       error.statusCode = 401;
       throw error;
     }
-    
+
     const token = jwt.sign(
       { email: loadedUser.email, donorId: loadedUser._id },
-      'technovate',
+      "technovate",
       { expiresIn: "2h" }
     );
     return res.status(200).json({ token: token });
   } catch (error) {
-    if(!error.statusCode){
-      error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
 };
 
@@ -123,5 +123,28 @@ exports.getRecipientList = async (req, res, next) => {
       error.statusCode = 500;
     }
     next(error);
+  }
+};
+
+exports.getAllDonors = async (req, res, next) => {
+  const data = await Donor.find();
+  return res.status(200).json({ data: data });
+};
+
+exports.getDonorById = async (req, res, next) => {
+  const id = new mongoose.Types.ObjectId(req.donor_id);
+  try {
+    const data = await Donor.findById({ _id: id });
+    if (!data) {
+      const error = new Error("NO donor found");
+      error.statusCode = 400;
+      throw error;
+    }
+    return res.status(200).json({data: data})
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
   }
 };

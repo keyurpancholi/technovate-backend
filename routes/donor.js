@@ -9,4 +9,8 @@ router.post('/recipientList', donorcontroller.getRecipientList)
 
 router.post('/login', donorcontroller.login)
 
+router.get('/donors', donorcontroller.getAllDonors)
+
+router.post('/donor', donorcontroller.getDonorById)
+
 module.exports = router
