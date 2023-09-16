@@ -11,4 +11,6 @@ router.post('/login', recipientController.login)
 
 router.post("/match", recipientController.matchByRecipientId)
 
+router.post("/status", recipientController.viewAppliedStatus)
+
 module.exports = router 
