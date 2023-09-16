@@ -60,7 +60,7 @@ exports.createMatch = async (req, res, next) => {
 
 exports.getAllOrgans = async (req, res, next) => {
   try {
-    const list = await OrganDonation.find().populate("organQueue");
+    const list = await OrganDonation.find().populate(["organQueue", "donorId"]);
     return res.status(200).json({ data: list });
   } catch (error) {
     if (!error.statusCode) {
