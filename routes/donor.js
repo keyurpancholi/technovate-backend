@@ -13,4 +13,6 @@ router.get('/donors', donorcontroller.getAllDonors)
 
 router.post('/donor', donorcontroller.getDonorById)
 
+router.patch("/organ", donorcontroller.changeOrgan)
+
 module.exports = router
