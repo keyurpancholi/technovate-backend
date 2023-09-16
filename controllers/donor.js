@@ -164,7 +164,7 @@ exports.changeOrgan = async (req, res, next) => {
       const error = new Error("Cant find donor")
       error.statusCode = 404
     }
-    return res.json(200).json({message: "Organs updated successfully"})
+    return res.status(200).json({message: "Organs updated successfully"})
   } catch (error) {
    if(!error.statusCode){
     error.statusCode = 500
