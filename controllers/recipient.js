@@ -125,7 +125,7 @@ exports.request = async (req, res, next) => {
       throw error;
     }
 
-    res.json(201).json({ data: data });
+    res.status(201).json({ data: data });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
