@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require('dotenv').config();
 // const adminRoutes = require("./routes/admin")
-// const donorRoutes = require("./routes/donor")
+const donorRoutes = require("./routes/donor")
 const recipientRoutes = require("./routes/recipient")
 const app = express();
 
@@ -11,8 +11,8 @@ const port = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
 
-// app.use('/admin', adminRoutes)
-// app.use('/donor', donorRoutes)
+app.use('/admin', adminRoutes)
+app.use('/donor', donorRoutes)
 app.use('/recipient', recipientRoutes)
 
 app.use((err, req, res, next) => {

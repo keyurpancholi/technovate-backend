@@ -35,7 +35,6 @@ exports.signup = async (req, res, next) => {
 
 exports.onboarding = async (req, res, next) => {
   const email = req.email;
-
   try {
 
     const data = await Recipient.update(
