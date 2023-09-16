@@ -136,7 +136,7 @@ exports.getAllDonors = async (req, res, next) => {
 exports.getDonorById = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.donor_id);
   try {
-    const data = await OrganDonation.findById({ _id : id }).populate('donorId');
+    const data = await OrganDonation.findById({ _id : id }).populate(['donorId', 'organQueue']);
     if (!data) {
       const error = new Error("NO donor found");
       error.statusCode = 400;
