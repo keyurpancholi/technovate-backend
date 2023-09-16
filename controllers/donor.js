@@ -2,6 +2,40 @@ const mongoose = require("mongoose");
 const Donor = require("../models/Donor");
 const OrganDonation = require("../models/OrganDonation");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+exports.login = async (req, res, next) => {
+  let loadedUser;
+
+  const { email, password } = req.body;
+
+  try {
+    const user = await Donor.findOne({ email: email });
+    if (!user) {
+      const error = new Error("No donor found. Invalid credentials");
+      error.statusCode = 404;
+      throw error;
+    }
+    loadedUser = user;
+    const bool = await bcrypt.compare(password, user.password);
+    if (!bool) {
+      const error = new Error("Wrong password!");
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = jwt.sign(
+      { email: loadedUser.email, donorId: loadedUser._id },
+      process.env.JWT_PRIVATE_KEY,
+      { expiresIn: "2h" }
+    );
+    return res.json(200).json({ token: token });
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+};
 
 exports.signup = async (req, res, next) => {
   // const errors = validationResult(req);
@@ -73,17 +107,19 @@ exports.getRecipientList = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.donor_id);
 
   try {
-    const list = await OrganDonation.findOne({ donorId: id }).populate('organQueue');
+    const list = await OrganDonation.findOne({ donorId: id }).populate(
+      "organQueue"
+    );
     if (!list) {
       const error = new Error("No organ donor found");
       error.statusCode = 404;
       throw error;
     }
-    return res.status(200).json({data: list})
+    return res.status(200).json({ data: list });
   } catch (error) {
-    if(!error.statusCode){
-      error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
 };

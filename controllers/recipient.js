@@ -5,6 +5,39 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose")
 
+exports.login = async (req, res, next) => {
+  let loadedUser;
+
+  const { email, password } = req.body;
+
+  try {
+    const user = await Recipient.findOne({ email: email });
+    if (!user) {
+      const error = new Error("No recipient found. Invalid credentials");
+      error.statusCode = 404;
+      throw error;
+    }
+    loadedUser = user;
+    const bool = await bcrypt.compare(password, user.password);
+    if (!bool) {
+      const error = new Error("Wrong password!");
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = jwt.sign(
+      { email: loadedUser.email, donorId: loadedUser._id },
+      process.env.JWT_PRIVATE_KEY,
+      { expiresIn: "2h" }
+    );
+    return res.json(200).json({ token: token });
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+};
+
 exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -7,4 +7,6 @@ router.post("/onboarding", donorcontroller.onboarding)
 
 router.post('/recipientList', donorcontroller.getRecipientList)
 
+router.post('/login', donorcontroller.login)
+
 module.exports = router

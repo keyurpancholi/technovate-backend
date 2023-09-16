@@ -1,3 +1,4 @@
+const Hospital = require("../models/Hospital");
 const Match = require("../models/Match");
 const OrganDonation = require("../models/OrganDonation");
 const mongoose = require("mongoose");
@@ -74,3 +75,59 @@ exports.updateStatus = async (req, res, next) => {
 };
 
 exports.getSingleMatch = async (req, res, next) => {};
+
+exports.login = async (req, res, next) => {
+  let loadedUser;
+
+  const { email, password } = req.body;
+
+  try {
+    const user = await Hospital.findOne({ email: email });
+    if (!user) {
+      const error = new Error("No recipient found. Invalid credentials");
+      error.statusCode = 404;
+      throw error;
+    }
+    loadedUser = user;
+    const bool = await bcrypt.compare(password, user.password);
+    if (!bool) {
+      const error = new Error("Wrong password!");
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = jwt.sign(
+      { email: loadedUser.email, donorId: loadedUser._id },
+      process.env.JWT_PRIVATE_KEY,
+      { expiresIn: "2h" }
+    );
+    return res.json(200).json({ token: token });
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+}
+
+exports.signup = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const hashedpw = await bcrypt.hash(password, 12);
+    const hospital = new Hospital({ email: email, password: hashedpw });
+    const resp = await hospital.save();
+    if (!resp){
+      const error = new Error("Failed to create a new account");
+      error.statusCode = 400;
+      throw err;
+    }
+    return res
+      .status(201)
+      .json({ message: "User registered successfully", data: resp });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+}

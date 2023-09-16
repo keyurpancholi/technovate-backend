@@ -11,4 +11,8 @@ router.post("/request", hospitalControllers.organMatchInitialize)
 
 router.post('/match', hospitalControllers.createMatch)
 
+router.post("/signup", hospitalControllers.signup)
+
+router.post("/login", hospitalControllers.login)
+
 module.exports = router

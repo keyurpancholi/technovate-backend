@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const hospitalRoutes = require("./routes/hostpital");
+const hospitalRoutes = require("./routes/hospital");
 const donorRoutes = require("./routes/donor");
 const recipientRoutes = require("./routes/recipient");
 const app = express();
