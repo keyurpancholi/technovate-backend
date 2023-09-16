@@ -2,6 +2,8 @@ const Hospital = require("../models/Hospital");
 const Match = require("../models/Match");
 const OrganDonation = require("../models/OrganDonation");
 const mongoose = require("mongoose");
+const bcrypt = require('bcryptjs')
+const jwt = require("jsonwebtoken")
 
 exports.organMatchInitialize = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.donor_id);
