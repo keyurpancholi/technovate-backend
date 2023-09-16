@@ -2,12 +2,12 @@ const Hospital = require("../models/Hospital");
 const Match = require("../models/Match");
 const OrganDonation = require("../models/OrganDonation");
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs')
-const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.organMatchInitialize = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.donor_id);
-  
+
   const organ = new OrganDonation({ donorId: id, organQueue: [] });
   try {
     const data = await organ.save();
@@ -29,16 +29,37 @@ exports.createMatch = async (req, res, next) => {
   const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id);
   const donor_id = new mongoose.Types.ObjectId(req.body.donor_id);
   const organ = req.body.organ;
+  const status = req.body.status;
+  const decline_message = req.body.decline_message || "";
 
   const match = new Match({
     donorId: donor_id,
     recipientId: recipient_id,
     organ: organ,
+    status: status,
+    decline_message: decline_message,
   });
   try {
     const data = await match.save();
     if (!data) {
       const error = new Error("Cant create a match");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const resp = await OrganDonation.findOne({ donorId: donor_id });
+    if (!resp) {
+      const error = new Error("Can't find a organ");
+      error.statusCode = 400;
+      throw error;
+    }
+    const idx = resp.organQueue.findIndex((recpId) => {
+      recpId == recipient_id;
+    });
+    resp.organQueue.splice(idx, 1);
+    const result = await resp.save();
+    if (!result) {
+      const error = new Error("Cant delete a match");
       error.statusCode = 400;
       throw error;
     }
@@ -78,7 +99,7 @@ exports.updateStatus = async (req, res, next) => {
     if (status === "Approved") {
       const resp = await Match.findByIdAndUpdate(
         { id: id },
-        { $set: { status: status} }
+        { $set: { status: status } }
       );
       if (!resp) {
         const error = new Error("Couldnt find a recipient");
@@ -86,10 +107,7 @@ exports.updateStatus = async (req, res, next) => {
         throw error;
       }
       return res.status(200).json({ data: resp });
-    }
-
-    else{
-
+    } else {
     }
   } catch (error) {
     if (!error.statusCode) {
@@ -122,7 +140,7 @@ exports.login = async (req, res, next) => {
     }
     const token = jwt.sign(
       { email: loadedUser.email, donorId: loadedUser._id },
-      'technovate',
+      "technovate",
       { expiresIn: "2h" }
     );
     return res.status(200).json({ token: token, user: loadedUser });

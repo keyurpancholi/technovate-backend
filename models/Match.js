@@ -14,7 +14,10 @@ const matchschema = new Schema({
     status: {
         type: String,
         enum: ['Approved', 'Rejected', 'Pending'],
-        default: 'Pending'
+    },
+    decline_message: {
+        type: String,
+        default: ""
     }
 })
 
