@@ -196,7 +196,7 @@ exports.makeAppointment = async (req, res, next) => {
 };
 
 exports.getAppointmentsByHospital = async (req, res) => {
-  const { hospital_id } = req.body;
+  const { hospital_id } = req.params.id;
   try {
     const resp = await Appointment.findOne({
       hospitalId: new mongoose.Types.ObjectId(hospital_id),

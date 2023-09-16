@@ -17,7 +17,7 @@ router.post('/login', hospitalControllers.login);
 
 router.get('/organs', hospitalControllers.getAllOrgans);
 
-router.get('/appointments', hospitalControllers.getAppointmentsByHospital);
+router.get('/appointments/:id', hospitalControllers.getAppointmentsByHospital);
 
 router.post('/appointments', hospitalControllers.makeAppointment);
 
