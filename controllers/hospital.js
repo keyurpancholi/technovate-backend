@@ -123,7 +123,7 @@ exports.login = async (req, res, next) => {
       'technovate',
       { expiresIn: "2h" }
     );
-    return res.json(200).json({ token: token });
+    return res.status(200).json({ token: token });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
