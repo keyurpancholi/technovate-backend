@@ -5,4 +5,4 @@ router.post('/signup', recipientController.signup)
 
 router.post('/onboarding', recipientController.onboarding)
 
-export default router 
+module.exports = router 

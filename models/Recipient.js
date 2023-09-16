@@ -25,4 +25,4 @@ const recipientSchema = new Schema({
 });
 
 const Recipient = mongoose.model("Recipient", recipientSchema);
-export default Recipient;
+module.exports = Recipient;
