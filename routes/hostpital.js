@@ -7,4 +7,6 @@ router.patch("/match", hospitalControllers.updateStatus)
 
 router.get('/match', hospitalControllers.getSingleMatch)
 
+router.post("/request", hospitalControllers.organMatchInitialize)
+
 module.exports = router

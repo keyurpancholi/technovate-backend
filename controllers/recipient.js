@@ -1,4 +1,5 @@
 const Recipient = require("../models/Recipient");
+const OrganDonation = require("../models/OrganDonation")
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose")
@@ -30,7 +31,7 @@ exports.signup = async (req, res, next) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    next(err);
+    next(error);
   }
 };
 
@@ -68,3 +69,31 @@ exports.onboarding = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.request = async (req, res, next) => {
+  const id = new mongoose.Types.ObjectId(req.body.organ_id)
+
+  try {
+    
+    const resp = await OrganDonation.findById({_id: id})
+    if (!resp){
+      const error = new Error("No user found")
+      error.statusCode = 404
+      throw error
+    }
+    resp.organQueue.push(new mongoose.Types.ObjectId(req.body.recipient_id))
+    const data = await resp.save()
+    if (!data){
+      const error = new Error("Couldnt add recipient to list")
+      error.statusCode = 400
+      throw error
+    }
+
+    res.json(201).json({data: data})
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+}

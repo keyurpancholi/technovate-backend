@@ -5,6 +5,6 @@ router.post('/signup', recipientController.signup)
 
 router.post('/onboarding', recipientController.onboarding)
 
-// router.post('/request', )
+router.patch('/request', recipientController.request)
 
 module.exports = router 

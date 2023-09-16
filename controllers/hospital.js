@@ -1,4 +1,26 @@
 const Match = require("../models/Match");
+const OrganDonation = require("../models/OrganDonation");
+const mongoose = require("mongoose");
+
+exports.organMatchInitialize = async (req, res, next) => {
+  const id = new mongoose.Types.ObjectId(req.body.donor_id);
+
+  const organ = new OrganDonation({ donorId: id, organQueue: [] });
+  try {
+    const data = await organ.save();
+    if(!data){
+      const error = new Error("Couldn't initialize organ donation queue")
+      error.statusCode = 400
+      throw error
+    }
+    res.status(201).json({data: data})
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+};
 
 exports.getAllMatch = async (req, res, next) => {
   const matches = await Match.find();
@@ -22,13 +44,11 @@ exports.updateStatus = async (req, res, next) => {
       throw error;
     }
   } catch (error) {
-    if(!error.statusCode){
-        error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
 };
 
-exports.getSingleMatch = async (req, res, next) => {
-    
-}
+exports.getSingleMatch = async (req, res, next) => {};
