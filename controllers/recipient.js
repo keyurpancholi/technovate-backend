@@ -106,7 +106,7 @@ exports.onboarding = async (req, res, next) => {
 };
 
 exports.request = async (req, res, next) => {
-  const id = new mongoose.Types.ObjectId(req.body.organ_id);
+  const id = new mongoose.Types.ObjectId(req.body.donor_id);
   const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id);
 
   try {
