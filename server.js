@@ -1,6 +1,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require("mongoose");
+require('dotenv').config();
 // const adminRoutes = require("./routes/admin")
 // const donorRoutes = require("./routes/donor")
 const recipientRoutes = require("./routes/recipient")
