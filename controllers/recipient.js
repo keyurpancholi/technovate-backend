@@ -137,7 +137,7 @@ exports.request = async (req, res, next) => {
 exports.matchByRecipientId = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.recipient_id)
   try {
-    const data = await Match.findOne({recipientId: id}).populate('donorId')
+    const data = await Match.find({recipientId: id}).populate('donorId')
     if(!data){
       const error = new Error("Cant find match")
       error.statusCode = 400
