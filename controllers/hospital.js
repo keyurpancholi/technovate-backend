@@ -22,6 +22,28 @@ exports.organMatchInitialize = async (req, res, next) => {
   }
 };
 
+exports.createMatch = async (req, res, next) => {
+  const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id)
+  const donor_id = new mongoose.Types.ObjectId(req.body.donor_id)
+  const organ = req.body.organ
+
+  const match = new Match({donorId: donor_id, recipientId: recipient_id, organ: organ})
+  try {
+    const data = await match.save()
+    if(!data){
+      const error = new Error("Cant create a match")
+      error.statusCode = 400
+      throw error
+    }
+    return res.status(200).json({data: data})
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
+}
+
 exports.getAllMatch = async (req, res, next) => {
   const matches = await Match.find();
   const data = await matches.json();

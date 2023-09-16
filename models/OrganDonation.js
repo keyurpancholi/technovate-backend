@@ -6,7 +6,8 @@ const organdonationschema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Donor'
     },
-    organQueue: [{type: Schema.Types.ObjectId, ref: 'Recipient'}]
+    organQueue: [{type: Schema.Types.ObjectId, ref: 'Recipient'}],
+    organ: String
 })
 
 const OrganDonation = mongoose.model('OrganDonation', organdonationschema)

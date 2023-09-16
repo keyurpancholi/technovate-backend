@@ -9,4 +9,6 @@ router.get('/match', hospitalControllers.getSingleMatch)
 
 router.post("/request", hospitalControllers.organMatchInitialize)
 
+router.post('/match', hospitalControllers.createMatch)
+
 module.exports = router

@@ -1,5 +1,6 @@
 const Recipient = require("../models/Recipient");
 const OrganDonation = require("../models/OrganDonation")
+const Match = require("../models/Match")
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose")
@@ -72,6 +73,7 @@ exports.onboarding = async (req, res, next) => {
 
 exports.request = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.organ_id)
+  const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id)
 
   try {
     
@@ -81,7 +83,8 @@ exports.request = async (req, res, next) => {
       error.statusCode = 404
       throw error
     }
-    resp.organQueue.push(new mongoose.Types.ObjectId(req.body.recipient_id))
+    resp.organQueue.push(recipient_id)
+
     const data = await resp.save()
     if (!data){
       const error = new Error("Couldnt add recipient to list")
