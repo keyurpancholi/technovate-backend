@@ -94,6 +94,8 @@ exports.onboarding = async (req, res, next) => {
       throw error;
     }
 
+     
+
     return res
       .status(201)
       .json({ message: "Onboarding successful", data: data });

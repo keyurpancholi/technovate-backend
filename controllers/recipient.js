@@ -110,7 +110,7 @@ exports.request = async (req, res, next) => {
   const recipient_id = new mongoose.Types.ObjectId(req.body.recipient_id);
 
   try {
-    const resp = await OrganDonation.findById({ _id: id });
+    const resp = await OrganDonation.findOne({ donorId: id });
     if (!resp) {
       const error = new Error("No user found");
       error.statusCode = 404;
