@@ -135,19 +135,39 @@ exports.request = async (req, res, next) => {
 };
 
 exports.matchByRecipientId = async (req, res, next) => {
-  const id = new mongoose.Types.ObjectId(req.body.recipient_id)
+  const id = new mongoose.Types.ObjectId(req.body.recipient_id);
   try {
-    const data = await Match.find({recipientId: id}).populate('donorId')
-    if(!data){
-      const error = new Error("Cant find match")
-      error.statusCode = 400
-      throw error
+    const data = await Match.find({ recipientId: id }).populate("donorId");
+    if (!data) {
+      const error = new Error("Cant find match");
+      error.statusCode = 400;
+      throw error;
     }
-    return res.status(200).json({data: data})
+    return res.status(200).json({ data: data });
   } catch (error) {
-    if(!error.statusCode){
-      error.statusCode = 500
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(error)
+    next(error);
   }
-}
+};
+
+exports.viewAppliedStatus = async (req, res, next) => {
+  const id = mongoose.Types.ObjectId(req.body.recipient_id);
+  const mainlist = [];
+  try {
+    const list = await OrganDonation.find({}).populate("donorId");
+    if(!list){
+      const error = new Error("No organ donations found")
+      error.statusCode = 404
+    }
+    list.forEach((item) => {
+      item.organQueue.find((recp) => {
+        if (recp.id == id) {
+          mainlist.append(item);
+        }
+      });
+    });
+    return res.status(200).json({ data: mainlist });
+  } catch (error) {}
+};
