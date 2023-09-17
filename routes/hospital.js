@@ -5,6 +5,8 @@ const hospitalControllers = require('../controllers/hospital');
 
 router.patch('/match', hospitalControllers.updateStatus);
 
+router.patch('/match/reject', hospitalControllers.rejectStatus);
+
 router.get('/match', hospitalControllers.getSingleMatch);
 
 router.post('/request', hospitalControllers.organMatchInitialize);
@@ -17,7 +19,7 @@ router.post('/login', hospitalControllers.login);
 
 router.get('/organs', hospitalControllers.getAllOrgans);
 
-router.get('/appointments/:id', hospitalControllers.getAppointmentsByHospital);
+router.get('/appointments', hospitalControllers.getAppointmentsByHospital);
 
 router.post('/appointments', hospitalControllers.makeAppointment);
 

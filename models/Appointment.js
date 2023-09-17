@@ -12,11 +12,14 @@ const appointmentschema = new Schema({
   },
   organ: String,
   date: Date,
-  doctors: Array,
-  hospital: {
-    type: Schema.Types.ObjectId,
-    ref: 'Hospital',
+  doctors: {
+    type: Array,
+    default: [],
   },
+  hospital_id: Number,
+  hospital_name: String,
+  hospital_location: String,
+  reason: String,
 });
 
 const Appointment = mongoose.model('Appointment', appointmentschema);

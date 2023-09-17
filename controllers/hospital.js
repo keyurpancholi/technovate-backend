@@ -73,6 +73,10 @@ exports.createMatch = async (req, res, next) => {
   }
 };
 
+// exports.updateMatchById = async (req, res, next) => {
+//   const { status } = req.body;
+//   const update = await Match.updateOneById();
+// };
 // exports.getAllMatch = async (req, res, next) => {
 //   const matches = await Match.find();
 //   const data = await matches.json();
@@ -108,9 +112,31 @@ exports.updateStatus = async (req, res, next) => {
         throw error;
       }
       return res.status(200).json({ data: resp });
-   
+    }
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
   }
- } catch (error) {
+};
+
+exports.rejectStatus = async (req, res, next) => {
+  const status = req.body.status;
+  const id = req.body.id;
+
+  try {
+    const resp = await Match.findByIdAndUpdate(
+      { id: id },
+      { $set: { status: status } }
+    );
+    if (!resp) {
+      const error = new Error('Couldnt find a recipient');
+      error.statusCode = 404;
+      throw error;
+    }
+    return res.status(200).json({ data: resp });
+  } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
@@ -177,15 +203,27 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.makeAppointment = async (req, res, next) => {
-  const { recipient_id, donor_id, date, organ, doctors, hospital_id } =
-    req.body;
+  const {
+    recipient_id,
+    donor_id,
+    date,
+    organ,
+    doctors,
+    hospital_name,
+    hospital_location,
+    hospital_id,
+    reason,
+  } = req.body;
   const appointment = new Appointment({
     recipientId: new mongoose.Types.ObjectId(recipient_id),
     donorId: new mongoose.Types.ObjectId(donor_id),
     date,
     doctors,
     organ,
-    hospital: new mongoose.Types.ObjectId(hospital_id),
+    hospital: hospital_id,
+    hospital_name,
+    reason,
+    hospital_location,
   });
   try {
     const data = await appointment.save();
@@ -196,11 +234,9 @@ exports.makeAppointment = async (req, res, next) => {
 };
 
 exports.getAppointmentsByHospital = async (req, res) => {
-  const { hospital_id } = req.params.id;
+  // const { hospital_id } = req.params.id;
   try {
-    const resp = await Appointment.findOne({
-      hospitalId: new mongoose.Types.ObjectId(hospital_id),
-    });
+    const resp = await Appointment.find().populate(['donorId', 'recipientId']);
 
     res.json({ data: resp });
   } catch (err) {
