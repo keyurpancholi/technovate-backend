@@ -25,4 +25,6 @@ router.post('/appointments', hospitalControllers.makeAppointment);
 
 router.patch('/appointments', hospitalControllers.updateAppointment);
 
+router.get('/appointments/:id', hospitalControllers.getAppointmentsById);
+
 module.exports = router;

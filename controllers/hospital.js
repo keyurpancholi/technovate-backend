@@ -262,3 +262,13 @@ exports.getAppointmentsByHospital = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+exports.getAppointmentsById = async (req, res) => {
+  const id = new mongoose.Types.ObjectId(req.params.id);
+
+  const rsp = await Appointment.find({
+    $or: [{ recipientId: id }, { donorId: id }],
+  });
+
+  res.json({ data: rsp });
+};
