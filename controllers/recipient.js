@@ -57,7 +57,7 @@ exports.signup = async (req, res, next) => {
     if (!resp) {
       const error = new Error("Failed to create a new account");
       error.statusCode = 400;
-      throw err;
+      throw error;
     }
     return res
       .status(201)
@@ -151,9 +151,26 @@ exports.matchByRecipientId = async (req, res, next) => {
     next(error);
   }
 };
+exports.matchByDonorId = async (req, res, next) => {
+  const id = new mongoose.Types.ObjectId(req.body.donor_id);
+  try {
+    const data = await Match.find({ donorId: id }).populate(["recipientId", 'donorId']);
+    if (!data) {
+      const error = new Error("Cant find match");
+      error.statusCode = 400;
+      throw error;
+    }
+    return res.status(200).json({ data: data });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+};
 
 exports.viewAppliedStatus = async (req, res, next) => {
-  const id = mongoose.Types.ObjectId(req.body.recipient_id);
+  const id = new mongoose.Types.ObjectId(req.body.recipient_id);
   const mainlist = [];
   try {
     const list = await OrganDonation.find({}).populate("donorId");
@@ -168,6 +185,12 @@ exports.viewAppliedStatus = async (req, res, next) => {
         }
       });
     });
+    console.log(mainlist)
     return res.status(200).json({ data: mainlist });
-  } catch (error) {}
+  } catch (error) {
+    if(!error.statusCode){
+      error.statusCode = 500
+    }
+    next(error)
+  }
 };

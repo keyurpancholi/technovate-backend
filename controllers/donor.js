@@ -56,7 +56,7 @@ exports.signup = async (req, res, next) => {
     if (!resp) {
       const error = new Error("Failed to create a new account");
       error.statusCode = 400;
-      throw err;
+      throw error;
     }
     return res
       .status(201)
