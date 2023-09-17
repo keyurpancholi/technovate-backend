@@ -173,7 +173,8 @@ exports.viewAppliedStatus = async (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.body.recipient_id);
   const mainlist = [];
   try {
-    const list = await OrganDonation.find({}).populate("donorId");
+    const list = await OrganDonation.find({}).populate(["donorId", "organQueue"]);
+    console.log(list)
     if(!list){
       const error = new Error("No organ donations found")
       error.statusCode = 404
@@ -181,7 +182,7 @@ exports.viewAppliedStatus = async (req, res, next) => {
     list.forEach((item) => {
       item.organQueue.find((recp) => {
         if (recp.id == id) {
-          mainlist.append(item);
+          mainlist.push(item);
         }
       });
     });
