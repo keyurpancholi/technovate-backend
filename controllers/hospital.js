@@ -123,7 +123,7 @@ exports.updateStatus = async (req, res, next) => {
 
 exports.rejectStatus = async (req, res, next) => {
   const status = req.body.status;
-  // const id = new mongoose.Types.ObjectId(req.body.id);
+  const id = req.body.id;
 
   try {
     const resp = await Match.findByIdAndUpdate(
