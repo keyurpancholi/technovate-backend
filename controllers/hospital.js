@@ -73,6 +73,10 @@ exports.createMatch = async (req, res, next) => {
   }
 };
 
+// exports.updateMatchById = async (req, res, next) => {
+//   const { status } = req.body;
+//   const update = await Match.updateOneById();
+// };
 // exports.getAllMatch = async (req, res, next) => {
 //   const matches = await Match.find();
 //   const data = await matches.json();
@@ -110,6 +114,29 @@ exports.updateStatus = async (req, res, next) => {
       return res.status(200).json({ data: resp });
     } else {
     }
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+};
+
+exports.rejectStatus = async (req, res, next) => {
+  const status = req.body.status;
+  const id = req.body.id;
+
+  try {
+    const resp = await Match.findByIdAndUpdate(
+      { id: id },
+      { $set: { status: status } }
+    );
+    if (!resp) {
+      const error = new Error('Couldnt find a recipient');
+      error.statusCode = 404;
+      throw error;
+    }
+    return res.status(200).json({ data: resp });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
