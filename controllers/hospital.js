@@ -98,7 +98,7 @@ exports.getAllOrgans = async (req, res, next) => {
 
 exports.updateStatus = async (req, res, next) => {
   const status = req.body.status;
-  const id = req.body.id;
+  const id = new mongoose.Types.ObjectId(req.body.id);
 
   try {
     if (status === 'Approved') {
@@ -123,11 +123,11 @@ exports.updateStatus = async (req, res, next) => {
 
 exports.rejectStatus = async (req, res, next) => {
   const status = req.body.status;
-  const id = req.body.id;
+  const id = new mongoose.Types.ObjectId(req.body.id);
 
   try {
     const resp = await Match.findByIdAndUpdate(
-      { id: id },
+      { _id: id },
       { $set: { status: status } }
     );
     if (!resp) {
