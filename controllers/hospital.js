@@ -112,9 +112,8 @@ exports.updateStatus = async (req, res, next) => {
         throw error;
       }
       return res.status(200).json({ data: resp });
-   
-  }
- } catch (error) {
+    }
+  } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
@@ -124,11 +123,11 @@ exports.updateStatus = async (req, res, next) => {
 
 exports.rejectStatus = async (req, res, next) => {
   const status = req.body.status;
-  const id = req.body.id;
+  const id = new mongoose.Types.ObjectId(req.body.id);
 
   try {
     const resp = await Match.findByIdAndUpdate(
-      { _id: id },
+      { id: id },
       { $set: { status: status } }
     );
     if (!resp) {
