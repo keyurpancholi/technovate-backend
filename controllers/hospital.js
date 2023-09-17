@@ -128,7 +128,7 @@ exports.rejectStatus = async (req, res, next) => {
 
   try {
     const resp = await Match.findByIdAndUpdate(
-      { id: id },
+      { _id: id },
       { $set: { status: status } }
     );
     if (!resp) {
