@@ -234,11 +234,9 @@ exports.makeAppointment = async (req, res, next) => {
 };
 
 exports.getAppointmentsByHospital = async (req, res) => {
-  const { hospital_id } = req.params.id;
+  // const { hospital_id } = req.params.id;
   try {
-    const resp = await Appointment.findMany({
-      hospital_id: id,
-    });
+    const resp = await Appointment.find();
 
     res.json({ data: resp });
   } catch (err) {
