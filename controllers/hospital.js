@@ -219,7 +219,9 @@ exports.makeAppointment = async (req, res, next) => {
     date,
     doctors,
     organ,
-    hospital: new mongoose.Types.ObjectId(hospital_id),
+    hospital: hospital_id,
+    hospital_name,
+    hospital_location,
   });
   try {
     const data = await appointment.save();
