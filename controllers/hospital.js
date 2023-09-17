@@ -211,6 +211,7 @@ exports.makeAppointment = async (req, res, next) => {
     doctors,
     hospital_name,
     hospital_location,
+    hospital_id,
     reason,
   } = req.body;
   const appointment = new Appointment({
@@ -221,6 +222,7 @@ exports.makeAppointment = async (req, res, next) => {
     organ,
     hospital: hospital_id,
     hospital_name,
+    reason,
     hospital_location,
   });
   try {
