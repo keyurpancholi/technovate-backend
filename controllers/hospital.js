@@ -209,7 +209,6 @@ exports.makeAppointment = async (req, res, next) => {
     date,
     organ,
     doctors,
-    number,
     hospital_name,
     hospital_location,
     reason,
