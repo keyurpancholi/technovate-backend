@@ -268,7 +268,7 @@ exports.getAppointmentsById = async (req, res) => {
 
   const rsp = await Appointment.find({
     $or: [{ recipientId: id }, { donorId: id }],
-  });
+  }).populate(['recipientId', 'donorId']);
 
   res.json({ data: rsp });
 };
