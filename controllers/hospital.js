@@ -123,12 +123,13 @@ exports.updateStatus = async (req, res, next) => {
 
 exports.rejectStatus = async (req, res, next) => {
   const status = req.body.status;
+  const decline_message = req.body.decline_message;
   const id = new mongoose.Types.ObjectId(req.body.id);
 
   try {
     const resp = await Match.findByIdAndUpdate(
       { _id: id },
-      { $set: { status: status } }
+      { $set: { status: status, decline_message: reason } }
     );
     if (!resp) {
       const error = new Error('Couldnt find a recipient');
