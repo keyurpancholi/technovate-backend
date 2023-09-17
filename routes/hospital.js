@@ -23,4 +23,6 @@ router.get('/appointments', hospitalControllers.getAppointmentsByHospital);
 
 router.post('/appointments', hospitalControllers.makeAppointment);
 
+router.patch('/appointments', hospitalControllers.updateAppointment);
+
 module.exports = router;

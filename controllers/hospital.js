@@ -233,6 +233,24 @@ exports.makeAppointment = async (req, res, next) => {
   }
 };
 
+exports.updateAppointment = async (req, res, next) => {
+  const { appoint_id, date, doctors, decline } = req.body;
+
+  if (decline == true) {
+    const resp = await Appointment.findOneAndDelete({ id: appoint_id });
+    return res.json({ data: resp });
+  }
+
+  const resp = await Appointment.updateOne(
+    { id: appoint_id },
+    {
+      date,
+      doctors,
+    }
+  );
+  return res.json({ data: resp });
+};
+
 exports.getAppointmentsByHospital = async (req, res) => {
   // const { hospital_id } = req.params.id;
   try {
