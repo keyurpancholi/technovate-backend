@@ -129,7 +129,7 @@ exports.rejectStatus = async (req, res, next) => {
   try {
     const resp = await Match.findByIdAndUpdate(
       { _id: id },
-      { $set: { status: status, decline_message: reason } }
+      { $set: { status: status, decline_message: decline_message } }
     );
     if (!resp) {
       const error = new Error('Couldnt find a recipient');
