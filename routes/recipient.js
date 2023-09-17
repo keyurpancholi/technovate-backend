@@ -13,4 +13,6 @@ router.post("/match", recipientController.matchByRecipientId)
 
 router.post("/status", recipientController.viewAppliedStatus)
 
+router.patch("/match", recipientController.matchByDonorId)
+
 module.exports = router 

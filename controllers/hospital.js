@@ -96,7 +96,7 @@ exports.updateStatus = async (req, res, next) => {
   const id = req.body.id;
 
   try {
-    if (status === "Approved") {
+
       const resp = await Match.findByIdAndUpdate(
         { id: id },
         { $set: { status: status } }
@@ -107,8 +107,7 @@ exports.updateStatus = async (req, res, next) => {
         throw error;
       }
       return res.status(200).json({ data: resp });
-    } else {
-    }
+   
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -162,7 +161,7 @@ exports.signup = async (req, res, next) => {
     if (!resp) {
       const error = new Error("Failed to create a new account");
       error.statusCode = 400;
-      throw err;
+      throw error;
     }
     return res
       .status(201)
