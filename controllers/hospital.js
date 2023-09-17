@@ -123,7 +123,7 @@ exports.updateStatus = async (req, res, next) => {
 
 exports.rejectStatus = async (req, res, next) => {
   const status = req.body.status;
-  const id = req.body.id;
+  const _id = req.body.id;
 
   try {
     const resp = await Match.findByIdAndUpdate(
@@ -203,8 +203,17 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.makeAppointment = async (req, res, next) => {
-  const { recipient_id, donor_id, date, organ, doctors, hospital_id } =
-    req.body;
+  const {
+    recipient_id,
+    donor_id,
+    date,
+    organ,
+    doctors,
+    number,
+    hospital_name,
+    hospital_location,
+    reason,
+  } = req.body;
   const appointment = new Appointment({
     recipientId: new mongoose.Types.ObjectId(recipient_id),
     donorId: new mongoose.Types.ObjectId(donor_id),
@@ -224,8 +233,8 @@ exports.makeAppointment = async (req, res, next) => {
 exports.getAppointmentsByHospital = async (req, res) => {
   const { hospital_id } = req.params.id;
   try {
-    const resp = await Appointment.findOne({
-      hospitalId: new mongoose.Types.ObjectId(hospital_id),
+    const resp = await Appointment.findMany({
+      hospital_id: id,
     });
 
     res.json({ data: resp });
