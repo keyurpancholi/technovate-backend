@@ -236,7 +236,7 @@ exports.makeAppointment = async (req, res, next) => {
 exports.getAppointmentsByHospital = async (req, res) => {
   // const { hospital_id } = req.params.id;
   try {
-    const resp = await Appointment.find();
+    const resp = await Appointment.find().populate(['donorId', 'recipientId']);
 
     res.json({ data: resp });
   } catch (err) {
